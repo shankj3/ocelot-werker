@@ -1,0 +1,36 @@
+- name: set up crontab entry for pruning images 
+  cron:
+    name: "prune docker images"
+    special_time: daily
+    job: "/usr/bin/docker image prune -f"
+  become: true
+- name: set up crontab entry for deleting large images 
+  cron: 
+    name: "delete large images"
+    special_time: weekly
+    job: "/usr/bin/docker image ls | grep GB | awk '{ print $3 }' | xargs /usr/bin/docker image rm"
+  become: true
+- name: set up crontab entry for deleting weeks-old images 
+  cron: 
+    name: "delete weeks-old images"
+    special_time: weekly
+    job: "/usr/bin/docker image ls | grep 'weeks ago' | awk '{ print $3 }' | xargs /usr/bin/docker image rm"
+  become: true
+- name: set up crontab entry for deleting months-old images 
+  cron: 
+    name: "delete months-old images"
+    special_time: weekly
+    job: "/usr/bin/docker image ls | grep 'months ago' | awk '{ print $3 }' | xargs /usr/bin/docker image rm"
+  become: true
+- name: prune docker volumes
+  cron:
+    name: "delete docker volumes"
+    special_time: weekly
+    job: "/usr/bin/docker volume prune -f"
+  become: true
+- name: prune docker system hxc
+  cron:
+    name: "prune docker system hxc"
+    special_time: weekly
+    job: "/usr/bin/docker system prune -a --volumes"
+  become: true

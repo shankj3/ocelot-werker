@@ -1,0 +1,24 @@
+{% if vault_token != "" %}
+{# if vault_token isn't set, just assume that its under /etc/vaulted/token #}
+VAULT_TOKEN="{{vault_token}}"
+{% endif %}
+VAULT_ADDR="{{vault_addr}}"
+CONSUL_HTTP_ADDR="{{consul_http_addr}}"
+CONSUL_HOST="{{consul_ip}}"
+CONSUL_PORT="{{consul_port}}"
+NSQD_IP="{{nsqd_ip}}"
+NSQD_PORT="{{nsqd_port}}"
+NSQLOOKUPD_IP="{{nsqlookupd_ip}}"
+NSQLOOKUPD_PORT="{{nsqlookupd_port}}"
+REGISTER_IP="{{ ansible_default_ipv4.address }}"
+LOG_LEVEL="debug"
+PATH_PREFIX="{{pathprefix}}"
+{% if disk_pause_threshold != "" %}
+DISK_PAUSE_THRESHOLD="{{disk_pause_threshold}}"
+{% endif %}
+{% if disk_pause_path != "" %}
+DISK_PAUSE_PATH="{{disk_pause_path}}"
+{% endif %}
+{% if healthcheck_interval != "" %}
+HEALTHCHECK_INTERVAL={{healthcheck_interval}}
+{% endif %}

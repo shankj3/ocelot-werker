@@ -1,0 +1,59 @@
+---
+- name: make sure we have our required vars 
+  assert:
+    that:
+      - "vault_addr != ''"
+      - "version != ''"
+    msg: vault_addr & version are required vars
+# install wget, unzip, curl, jq
+- name: install package dependencies
+  include: package_deps.yml
+- name: set up docker cleaning cron jobs
+  include: setup_docker_crons.yml
+- name: generate service facts
+  service_facts:
+- name: stop werker systemd if it exists
+  systemd:
+    name: "werker"
+    daemon_reload: no
+    state: stopped
+    enabled: yes
+  become: true
+  when: "'werker.service' in ansible_facts.services"
+- name: reconfigure docker daemon to use new disk
+  include: move_docker_direc.yml
+  when: change_docker_direc == True
+- name: create the werker directory
+  file:
+    path: /etc/werker
+    state: directory
+    mode: 0755
+  become: true
+- name: docker login to private registry
+  command: docker login {{private_reg_url}} -u {{private_reg_user}} -p {{private_reg_password}}
+  when: private_reg_url|default("") != ""
+  become: true
+- name: download, extract and install werker zip archive
+  unarchive:
+    src: "https://s3-us-west-2.amazonaws.com/ocelotty/linux-werker{{version}}.zip"
+    dest: /usr/bin
+    mode: 0755
+    remote_src: yes
+  become: true
+- name: create environment file for werker service
+  template:
+    src: environment.j2
+    dest: /etc/werker/environment
+  become: true
+- name: create a systemd unit for the werker agent
+  template:
+    src: werker.service.j2
+    dest: /etc/systemd/system/werker.service
+  become: true  
+- name: reload systemd and start the werker service
+  systemd:
+    name: "werker"
+    daemon_reload: yes
+    state: restarted
+    enabled: yes
+  become: true

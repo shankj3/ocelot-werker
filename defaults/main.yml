@@ -1,0 +1,29 @@
+nsqd_ip: 172.17.0.1
+nsqd_port: 4150
+nsqlookupd_ip: 172.17.0.1
+nsqlookupd_port: 4161
+nsqlookupd_tcp_port: 4160
+consul_http_addr: "http://172.17.0.1:8500"
+consul_ip: "localhost"
+consul_port: "8500"
+private_reg_url: ""
+private_reg_user: "admin"
+private_reg_password: ""
+version: ""
+pathprefix: ""
+vault_addr: ""
+# this token just needs the policy defined in ocelot repo under deploy/policies/werker_deployer.hcl
+vault_restricted_token: ""
+# auth with approle 
+vault_role_id: ""
+vault_token: ""
+vault_version: 0.10.4
+# if true, reformat the disk named {{dev_disk_name}} to ext4 filesystem, mount to {{docker_direc}}, 
+# then change the systemd docker service file to use the {{docker_direc}} as its home directory instead of /var/lib/docker
+change_docker_direc: false
+docker_direc: "/docker"
+dev_disk_name: sdb
+# disk utility healthchecking
+disk_pause_threshold: ""
+disk_pause_path: ""
+healthcheck_interval: ""

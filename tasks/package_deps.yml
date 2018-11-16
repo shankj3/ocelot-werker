@@ -1,0 +1,22 @@
+---
+- name: install wget 
+  apt:
+    name: wget
+    state: present
+    update_cache: yes
+  become: true
+- name: install unzip
+  apt:
+    name: unzip
+    state: present
+  become: true
+- name: install jq
+  apt:
+    name: jq
+    state: present
+  become: true
+- name: install curl
+  apt:
+    name: curl
+    state: present
+  become: true
